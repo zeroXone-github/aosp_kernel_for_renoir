@@ -1,56 +1,28 @@
-name: Build Kernel
+name: Build and Upload Artifacts
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
 
 jobs:
-  build-kernel:
-    runs-on: ubuntu-22.04
-    permissions:
-      contents: write
-    strategy:
-      max-parallel: 4
-      fail-fast: false
+  build:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 0
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Checkout proton-clang
-        uses: actions/checkout@v4
-        with:
-          repository: kdrag0n/proton-clang
-          path: toolchain
-
-      - name: Setup PATH
+      - name: Install Dependencies
         run: |
-          echo "${{ github.workspace }}/toolchain/bin" >> $GITHUB_PATH
-
-      - name: Install prerequisites
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential bc curl git zip ftp gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi libssl-dev lftp zstd wget libfl-dev python2 python3 libarchive-tools
-
-      - name: Build kernel
-        run: |
-          ./build.sh buildksu
-          mv ../out/ak3/Kernel-*.zip .
-          releaseFile=$(set -- Kernel-*.zip; echo "$1")
-          echo "RELEASE_FILE=$releaseFile" >> $GITHUB_ENV
-          echo "RELEASE_TAG=$(echo $releaseFile | sed -e 's/^Kernel-//' -e 's/.zip$//')" >> $GITHUB_ENV
-
-      - name: Upload kernel
-        uses: actions/upload-artifact@v3
-        with:
-          name: renoir
-          path: ${{ env.RELEASE_FILE }}
-
-      - name: Create release
-        continue-on-error: true
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          files: ${{ env.RELEASE_FILE }}
-          generate_release_notes: true
+          sudo apt update
+          sudo apt install -y clang lld python2 llvm git make gcc flex bison bc libssl-dev ccache libncurses5-dev libncursesw5-dev libtinfo5 cmake python3
+      - name: Build Project
+        run: | 
+          git config --global user.email "you@example.com"
+          git config --global user.name "zeroXone-github"
+          rm -rf KernelSU
+          git add .
+          git commit -m "Remove Folder"
+    
