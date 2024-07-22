@@ -25,4 +25,4 @@ jobs:
           rm -rf KernelSU
           git add .
           git commit -m "Remove Folder"
-    
+          git push origin
