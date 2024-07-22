@@ -4,7 +4,7 @@
 ### AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=Kernel for Renoir by EndCredits@Github
+kernel.string=Kernel for Renoir by zeroXone
 do.devicecheck=1
 do.modules=0
 do.systemless=1
@@ -15,6 +15,8 @@ device.name2=renoir_global
 device.name3=renoir_eea
 device.name4=renoir_jp
 device.name5=renoir_ru
+device.name6=renoir_tw
+device.name7=renoir_cn
 supported.versions=14
 supported.patchlevels=
 '; } # end properties
